@@ -14,18 +14,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const questionState = document.getElementById('question-state');
     const successState = document.getElementById('success-state');
     const hoverMessage = document.getElementById('hover-message');
+    const progressSection = document.getElementById('progress-section');
+    const progressFill = document.getElementById('progress-fill');
+    const progressPercent = document.getElementById('progress-percent');
+    const progressStatus = document.getElementById('progress-status');
+    const successMainBlocks = document.querySelectorAll('.success-main');
     
     // ===== CONFIGURATION =====
     // Funny messages to display when hovering over the No button
     const hoverMessages = [
-        "// Warning: Undefined behavior detected in FfionModule",
-        "Error 403: Permission Denied to break Ffion's heart",
-        "❌ Segmentation Fault (core dumped on Ffion)",
-        "⚠️ This will break production: Ffion's smile",
-        "Runtime Error: HeartNotFoundException(for Ffion)",
-        "❗ Failed to compile: missing Ffion as valentine",
-        "🚫 Access Denied: Love.lock held by Ffion",
-        "⛔ Exception: NullPointerException at HeartForFfion.java:14"
+        "Are you sure? This might make Dean super sad...",
+        "Tiny warning: saying no could dim one very big smile.",
+        "Careful, this button is linked directly to Dean's heart.",
+        "Whistledown would be SHOCKED if you pressed that.",
+        "Gentle reminder: you are very, very loved.",
+        "Ffion, the universe is quietly voting for YES.",
+        "Rumour has it this button was never meant to be clicked.",
+        "Maybe try the green happy button instead? 💚"
     ];
     
     // Counter to track how many times No button has been clicked
@@ -33,12 +38,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Different funny texts for the No button after each click
     const noButtonTexts = [
-        "✗ return false;",
-        "❌ try again...",
-        "🤔 git revert?",
-        "😅 npm uninstall no",
-        "🙃 sudo rm -rf no",
-        "😆 404: No not found"
+        "No, thank you",
+        "Are you really sure?",
+        "Maybe that was a slip...",
+        "What if we try yes instead?",
+        "My heart is running away 😳",
+        "Button temporarily confused, please press YES"
     ];
 
     // ===== YES BUTTON CLICK HANDLER =====
@@ -47,14 +52,17 @@ document.addEventListener('DOMContentLoaded', function() {
         // Hide the question, show the success message
         questionState.classList.remove('active');
         successState.classList.add('active');
+
+        // Reset and start build animation
+        startBuildProgress();
+
+        // Gentle vibration on supported devices
+        if (navigator.vibrate) {
+            navigator.vibrate([80, 40, 80]);
+        }
         
         // Add background celebration pulse
         document.body.classList.add('celebrate');
-
-        // Trigger confetti celebration, floating hearts, and dancing cats
-        startConfetti();
-        startHearts();
-        startCats();
         
         // Optional: Play a sound effect (uncomment if you add a sound file)
         // playSound('success.mp3');
@@ -146,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Array to store all confetti pieces
         const confettiPieces = [];
-        const confettiCount = 150; // Number of confetti pieces
+        const confettiCount = 200; // Number of confetti pieces
         
         // Colors for confetti (matching our theme)
         const colors = ['#ff6b9d', '#00d9ff', '#bd93f9', '#50fa7b', '#ffb86c'];
@@ -230,10 +238,49 @@ document.addEventListener('DOMContentLoaded', function() {
         animateConfetti();
     }
 
+    // ===== BUILD PROGRESS BAR ANIMATION =====
+    function startBuildProgress() {
+        if (!progressFill || !progressPercent || !progressStatus) return;
+
+        // Ensure main success content is hidden at the start
+        successMainBlocks.forEach(el => el.classList.add('hidden-success'));
+
+        let current = 0;
+        const steps = [
+            { percent: 18, text: 'Checking: does Ffion know how wonderful she is? 💘' },
+            { percent: 42, text: 'Gathering all the reasons Dean is obsessed with your smile...' },
+            { percent: 73, text: 'Filling this Valentine with extra softness and cuddles 💕' },
+            { percent: 92, text: 'Adding final sparkle, kisses, and happy-heart energy ✨', },
+            { percent: 100, text: 'Ready! Opening the part where Dean melts completely...' }
+        ];
+
+        steps.forEach((step, index) => {
+            setTimeout(() => {
+                current = step.percent;
+                progressFill.style.width = current + '%';
+                progressPercent.textContent = current + '%';
+                progressStatus.textContent = step.text;
+
+                if (current === 100) {
+                    // Brief pause, then reveal main success content
+                    setTimeout(() => {
+                        progressSection.style.display = 'none';
+                        successMainBlocks.forEach(el => el.classList.remove('hidden-success'));
+
+                        // Start big celebration once "build" is done
+                        startConfetti();
+                        startHearts();
+                        startCats();
+                    }, 700);
+                }
+            }, index * 900);
+        });
+    }
+
     // ===== FLOATING HEART BURST =====
     // Extra cute floating hearts when Yes is clicked
     function startHearts() {
-        const heartCount = 24;
+        const heartCount = 40;
 
         for (let i = 0; i < heartCount; i++) {
             const heart = document.createElement('span');
@@ -258,16 +305,42 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 3500 + delay * 1000);
         }
 
+        // Fire a couple more mini-heart bursts for extra drama
+        setTimeout(() => spawnMiniHearts(18), 1200);
+        setTimeout(() => spawnMiniHearts(18), 2400);
+
         // Stop the background pulse after a little while
         setTimeout(() => {
             document.body.classList.remove('celebrate');
-        }, 6000);
+        }, 7000);
+    }
+
+    // Smaller follow‑up heart bursts
+    function spawnMiniHearts(count) {
+        for (let i = 0; i < count; i++) {
+            const heart = document.createElement('span');
+            heart.classList.add('floating-heart');
+            heart.textContent = Math.random() > 0.5 ? '💖' : '💘';
+
+            const offset = (Math.random() - 0.5) * 320; // wider spread
+            const delay = Math.random() * 0.6;
+            const size = 18 + Math.random() * 14;
+
+            heart.style.setProperty('--x-offset', `${offset}px`);
+            heart.style.fontSize = `${size}px`;
+            heart.style.left = `${20 + Math.random() * 60}vw`;
+            heart.style.animationDelay = `${delay}s`;
+
+            document.body.appendChild(heart);
+
+            setTimeout(() => heart.remove(), 3200 + delay * 1000);
+        }
     }
 
     // ===== DANCING CAT GIFS =====
     // Spawns dancing cat GIFs all over the screen
     function startCats() {
-        const catCount = 10;
+        const catCount = 18;
 
         for (let i = 0; i < catCount; i++) {
             const cat = document.createElement('img');
@@ -314,11 +387,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ===== CONSOLE MESSAGE =====
-    // Fun message for developers who open the console
-    console.log('%c💻 Hey there, Ffion (or curious developer)! 💖', 'color: #ff6b9d; font-size: 20px; font-weight: bold;');
-    console.log('%cThis little terminal was coded especially for you, Ffion.', 'color: #00d9ff; font-size: 14px;');
-    console.log('%cIf you are not Ffion, please step away from the console 😜', 'color: #bd93f9; font-size: 14px;');
-    console.log('%cHint: Try pressing Y or N on your keyboard 😉', 'color: #50fa7b; font-size: 14px;');
+    // Sweet little note for anyone peeking behind the scenes
+    console.log('%c💖 Hi Ffion (or secret helper)! 💖', 'color: #ff6b9d; font-size: 20px; font-weight: bold;');
+    console.log('%cSomeone spent a lot of care making this just for you.', 'color: #00d9ff; font-size: 14px;');
+    console.log('%cYou are very loved, very adored, and very special.', 'color: #bd93f9; font-size: 14px;');
+    console.log('%cTiny hint: you can press Y or N on your keyboard.', 'color: #50fa7b; font-size: 14px;');
 
 });
 
