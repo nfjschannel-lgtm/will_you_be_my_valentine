@@ -48,8 +48,13 @@ document.addEventListener('DOMContentLoaded', function() {
         questionState.classList.remove('active');
         successState.classList.add('active');
         
-        // Trigger confetti celebration
+        // Add background celebration pulse
+        document.body.classList.add('celebrate');
+
+        // Trigger confetti celebration, floating hearts, and dancing cats
         startConfetti();
+        startHearts();
+        startCats();
         
         // Optional: Play a sound effect (uncomment if you add a sound file)
         // playSound('success.mp3');
@@ -223,6 +228,69 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Start the animation
         animateConfetti();
+    }
+
+    // ===== FLOATING HEART BURST =====
+    // Extra cute floating hearts when Yes is clicked
+    function startHearts() {
+        const heartCount = 24;
+
+        for (let i = 0; i < heartCount; i++) {
+            const heart = document.createElement('span');
+            heart.classList.add('floating-heart');
+            heart.textContent = Math.random() > 0.5 ? '💖' : '💘';
+
+            // Random left offset and slight delay for a more natural burst
+            const offset = (Math.random() - 0.5) * 260; // -130px to 130px
+            const delay = Math.random() * 0.8; // 0–0.8s stagger
+            const size = 22 + Math.random() * 16; // 22–38px
+
+            heart.style.setProperty('--x-offset', `${offset}px`);
+            heart.style.fontSize = `${size}px`;
+            heart.style.left = '50%';
+            heart.style.animationDelay = `${delay}s`;
+
+            document.body.appendChild(heart);
+
+            // Clean up after animation
+            setTimeout(() => {
+                heart.remove();
+            }, 3500 + delay * 1000);
+        }
+
+        // Stop the background pulse after a little while
+        setTimeout(() => {
+            document.body.classList.remove('celebrate');
+        }, 6000);
+    }
+
+    // ===== DANCING CAT GIFS =====
+    // Spawns dancing cat GIFs all over the screen
+    function startCats() {
+        const catCount = 10;
+
+        for (let i = 0; i < catCount; i++) {
+            const cat = document.createElement('img');
+            cat.classList.add('dancing-cat');
+            cat.src = 'cat-dance.gif'; // Add this GIF file to your project root
+            cat.alt = 'Happy dancing cat';
+
+            // Random position across the viewport
+            const topPercent = 10 + Math.random() * 70;  // 10%–80% from top
+            const leftPercent = 8 + Math.random() * 84;  // 8%–92% from left
+            const delay = Math.random() * 1.5;           // Staggered animation start
+
+            cat.style.top = `${topPercent}vh`;
+            cat.style.left = `${leftPercent}vw`;
+            cat.style.animationDelay = `${delay}s`;
+
+            document.body.appendChild(cat);
+
+            // Remove cats after a while so they don't stay forever
+            setTimeout(() => {
+                cat.remove();
+            }, 8000 + delay * 1000);
+        }
     }
     
     // ===== HANDLE WINDOW RESIZE =====
