@@ -19,6 +19,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const progressPercent = document.getElementById('progress-percent');
     const progressStatus = document.getElementById('progress-status');
     const successMainBlocks = document.querySelectorAll('.success-main');
+    const bridgertonLetter = document.getElementById('bridgerton-letter');
+    const letterEnvelope = document.getElementById('letter-envelope');
+    const letterContent = document.getElementById('letter-content');
+    const letterClose = document.getElementById('letter-close');
 
     // Tracks whether the secret cat easter egg has already been triggered
     let catEasterEggTriggered = false;
@@ -393,7 +397,29 @@ document.addEventListener('DOMContentLoaded', function() {
         // Remove cat after a while so it doesn't stay forever
         setTimeout(() => {
             cat.remove();
+            // Once the main celebration fades, reveal the Bridgerton letter
+            showBridgertonLetter();
         }, 9000);
+    }
+
+    // ===== BRIDGERTON LETTER LOGIC =====
+    function showBridgertonLetter() {
+        if (!bridgertonLetter) return;
+        bridgertonLetter.classList.remove('hidden-letter');
+        bridgertonLetter.classList.add('visible-letter');
+    }
+
+    if (letterEnvelope && bridgertonLetter) {
+        letterEnvelope.addEventListener('click', function() {
+            bridgertonLetter.classList.add('open');
+        });
+    }
+
+    if (letterClose && bridgertonLetter) {
+        letterClose.addEventListener('click', function(event) {
+            event.stopPropagation();
+            bridgertonLetter.classList.add('fade-out');
+        });
     }
     
     // ===== HANDLE WINDOW RESIZE =====

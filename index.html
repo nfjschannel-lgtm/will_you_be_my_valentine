@@ -135,6 +135,27 @@
     <!-- Confetti canvas for celebration effect -->
     <canvas id="confetti-canvas"></canvas>
 
+    <!-- Bridgerton-style letter overlay (appears after celebration) -->
+    <div id="bridgerton-letter" class="bridgerton-letter hidden-letter">
+        <div class="bridgerton-letter-inner">
+            <div id="letter-envelope" class="letter-envelope">
+                <div class="letter-envelope-top"></div>
+                <div class="letter-envelope-body">
+                    <div class="letter-seal">D ♥ F</div>
+                    <p class="letter-envelope-intro">Dearest gentle reader,</p>
+                    <p class="letter-envelope-hint">A most delicate missive awaits Miss Ffion. Tap to open.</p>
+                </div>
+            </div>
+
+            <div id="letter-content" class="letter-content">
+                <button id="letter-close" class="letter-close" aria-label="Close letter">×</button>
+                <p class="letter-opening">Dearest Miss Ffion,</p>
+                <p class="letter-body">This author finds himself rather without sufficient words to describe the gentle havoc you have wrought upon his heart. Since your presence first graced his days, the most ordinary hours have taken on a softness and sparkle that can only be attributed to you. Your laugh rewrites the very air around you, your kindness leaves the world a little more bearable, and your warmth is the place this hopeful gentleman most longs to call home. Should you choose to claim him as your Valentine, he vows to adore you in both the grand gestures and the quiet, silly, everyday moments that make a life together so very sweet.</p>
+                <p class="letter-closing">Yours most devotedly,<br>Dean</p>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript file -->
     <script src="script.js"></script>
 </body>
