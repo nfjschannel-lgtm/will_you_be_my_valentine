@@ -534,66 +534,66 @@ function renderLetterStep(step) {
         letterInner.classList.remove('page-fading');
         letterInner.classList.add('page-enter');
         setTimeout(() => letterInner.classList.remove('page-enter'), 280);
+
+        // Keep data-step in sync for reliability on all devices
+        if (bridgertonLetter) {
+            bridgertonLetter.setAttribute('data-step', String(step));
+        }
+
+        // Update Next button label
+        if (step < 3) {
+            letterNext.textContent = 'Next ▸';
+        } else {
+            letterNext.textContent = 'Finish ▸';
+        }
+
+        // Attach interactions for gifts on final step (now that DOM is in place)
+        if (step === 3) {
+            const chocs = document.getElementById('gift-chocolates');
+            const flowers = document.getElementById('gift-flowers');
+            const letterContent = document.getElementById('letter-content');
+
+            function checkGiftsComplete() {
+                if (!chocs || !flowers || !letterContent) return;
+                if (chocs.classList.contains('opened') && flowers.classList.contains('opened')) {
+                    if (!letterInner.querySelector('.letter-final-note')) {
+                        const note = document.createElement('p');
+                        note.className = 'letter-final-note';
+                        note.textContent = 'Until I can put all of this in your hands for real, I am right here with you in every heartbeat.';
+                        letterInner.appendChild(note);
+                    }
+                    letterContent.classList.add('letter-glow');
+                }
+            }
+
+            if (chocs) {
+                chocs.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    if (!chocs.classList.contains('opened')) {
+                        chocs.classList.add('opened');
+                        spawnGiftHearts(chocs, ['💝', '🍫']);
+                        checkGiftsComplete();
+                    }
+                });
+            }
+
+            if (flowers) {
+                flowers.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    if (!flowers.classList.contains('opened')) {
+                        flowers.classList.add('opened');
+                        spawnGiftHearts(flowers, ['🌹', '💗']);
+                        checkGiftsComplete();
+                    }
+                });
+            }
+        }
     };
 
     if (hadContent) {
         setTimeout(applyContent, 200);
     } else {
         applyContent();
-    }
-
-    // Keep data-step in sync for reliability on all devices
-    if (bridgertonLetter) {
-        bridgertonLetter.setAttribute('data-step', String(step));
-    }
-
-    // Update Next button label
-    if (step < 3) {
-        letterNext.textContent = 'Next ▸';
-    } else {
-        letterNext.textContent = 'Finish ▸';
-    }
-
-    // Attach interactions for gifts on final step
-    if (step === 3) {
-        const chocs = document.getElementById('gift-chocolates');
-        const flowers = document.getElementById('gift-flowers');
-        const letterContent = document.getElementById('letter-content');
-
-        function checkGiftsComplete() {
-            if (!chocs || !flowers || !letterContent) return;
-            if (chocs.classList.contains('opened') && flowers.classList.contains('opened')) {
-                if (!letterInner.querySelector('.letter-final-note')) {
-                    const note = document.createElement('p');
-                    note.className = 'letter-final-note';
-                    note.textContent = 'Until I can put all of this in your hands for real, I am right here with you in every heartbeat.';
-                    letterInner.appendChild(note);
-                }
-                letterContent.classList.add('letter-glow');
-            }
-        }
-
-        if (chocs) {
-            chocs.addEventListener('click', function(event) {
-                event.stopPropagation();
-                if (!chocs.classList.contains('opened')) {
-                    chocs.classList.add('opened');
-                    spawnGiftHearts(chocs, ['💝', '🍫']);
-                    checkGiftsComplete();
-                }
-            });
-        }
-
-        if (flowers) {
-            flowers.addEventListener('click', function(event) {
-                event.stopPropagation();
-                if (!flowers.classList.contains('opened')) {
-                    flowers.classList.add('opened');
-                    spawnGiftHearts(flowers, ['🌹', '💗']);
-                    checkGiftsComplete();
-                }
-            });
-        }
     }
 }
 
