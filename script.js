@@ -23,9 +23,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const letterEnvelope = document.getElementById('letter-envelope');
     const letterContent = document.getElementById('letter-content');
     const letterClose = document.getElementById('letter-close');
+    const letterInner = document.getElementById('letter-inner');
+    const letterNext = document.getElementById('letter-next');
 
     // Tracks whether the secret cat easter egg has already been triggered
     let catEasterEggTriggered = false;
+    let letterStep = 1;
+    const totalLetterSteps = 3;
     
     // ===== CONFIGURATION =====
     // Funny messages to display when hovering over the No button
@@ -407,11 +411,16 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!bridgertonLetter) return;
         bridgertonLetter.classList.remove('hidden-letter');
         bridgertonLetter.classList.add('visible-letter');
+        letterStep = 1;
+        renderLetterStep(letterStep);
     }
 
     if (letterEnvelope && bridgertonLetter) {
         letterEnvelope.addEventListener('click', function() {
             bridgertonLetter.classList.add('open');
+            if (!letterInner.innerHTML) {
+                renderLetterStep(letterStep);
+            }
         });
     }
 
@@ -419,6 +428,23 @@ document.addEventListener('DOMContentLoaded', function() {
         letterClose.addEventListener('click', function(event) {
             event.stopPropagation();
             bridgertonLetter.classList.add('fade-out');
+        });
+    }
+
+    if (letterNext && bridgertonLetter) {
+        letterNext.addEventListener('click', function(event) {
+            event.stopPropagation();
+            advanceLetterStep();
+        });
+    }
+
+    if (letterContent && bridgertonLetter) {
+        letterContent.addEventListener('click', function(event) {
+            // Ignore clicks on close button, Next button or gift cards
+            if (event.target.closest('#letter-close') || event.target.closest('#letter-next') || event.target.closest('.gift-card')) {
+                return;
+            }
+            advanceLetterStep();
         });
     }
     
@@ -450,6 +476,97 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('%cTiny hint: you can press Y or N on your keyboard.', 'color: #50fa7b; font-size: 14px;');
 
 });
+
+// ===== BRIDGERTON LETTER CONTENT LOGIC =====
+function renderLetterStep(step) {
+    const letterInner = document.getElementById('letter-inner');
+    const letterNext = document.getElementById('letter-next');
+    if (!letterInner || !letterNext) return;
+
+    let html = '';
+
+    if (step === 1) {
+        html = `
+            <p class="letter-opening">Dearest Ffion,</p>
+            <p class="letter-body">Today is our first Valentines Day, although every single day is as special as valentines day with you. But today is an exception, as it is the day of love.<br><br>
+            Today I express, although I am not there with you at this very moment, I want to say your laughter rewrites the entire atmosphere, your smile leaves sparkles to the world, your voice becomes music to my ears, and your eyes, is just impossible to define, as it surpass the meaning of perfection.</p>
+            <p class="letter-closing">Yours most devotedly,<br>Dean</p>
+        `;
+    } else if (step === 2) {
+        html = `
+            <p class="letter-opening">Dear Ffion,</p>
+            <p class="letter-body">Today I want to vow that I will forever adore you, in the happy days, in the bad days, in the big days, no matter what. I vow to always be with you, I vow to protect you, I vow to never hurt you. I love you SO MUCH Ffion.<br><br>
+            And I cannot wait to meet you soon.</p>
+            <p class="letter-closing">Yours most devotedly,<br>Dean</p>
+        `;
+    } else {
+        html = `
+            <p class="letter-opening">For my sweetest Valentine,</p>
+            <p class="letter-body">Because I cannot be there in person just yet, I wanted to still place something soft and sweet into your hands for tonight. So, until the real thing arrives, I brought you a little digital care package. Choose what to open first:</p>
+            <div class="gift-row">
+                <div class="gift-card" id="gift-chocolates">
+                    <div class="gift-emoji">🍫</div>
+                    <div class="gift-title">A box of chocolates</div>
+                    <div class="gift-text">Imagine I&apos;m next to you, placing this box in your lap, watching your eyes light up as you choose the first piece. Every little square is a tiny &quot;I love you&quot; that I wish I could feed you myself.</div>
+                </div>
+                <div class="gift-card" id="gift-flowers">
+                    <div class="gift-emoji">🌹</div>
+                    <div class="gift-title">A bouquet of flowers</div>
+                    <div class="gift-text">Picture me standing at your door with flowers chosen just for you, colours that make your smile even brighter. I tuck one behind your ear, tell you how beautiful you are, and promise that there will be real petals waiting for you very soon.</div>
+                </div>
+            </div>
+            <p class="letter-body">These are only little pixels on a screen, but behind them is something very real: I am thinking of you, missing you, and counting down the days until I can give you all of this for real, in person.</p>
+            <p class="letter-closing">Until then, accept these sweet stand-ins and all of my heart.<br>Yours most devotedly,<br>Dean</p>
+        `;
+    }
+
+    letterInner.innerHTML = html.trim();
+
+    // Update Next button label
+    if (step < 3) {
+        letterNext.textContent = 'Next ▸';
+    } else {
+        letterNext.textContent = 'Finish ▸';
+    }
+
+    // Attach interactions for gifts on final step
+    if (step === 3) {
+        const chocs = document.getElementById('gift-chocolates');
+        const flowers = document.getElementById('gift-flowers');
+
+        if (chocs) {
+            chocs.addEventListener('click', function(event) {
+                event.stopPropagation();
+                chocs.classList.add('opened');
+            });
+        }
+
+        if (flowers) {
+            flowers.addEventListener('click', function(event) {
+                event.stopPropagation();
+                flowers.classList.add('opened');
+            });
+        }
+    }
+}
+
+function advanceLetterStep() {
+    const bridgertonLetter = document.getElementById('bridgerton-letter');
+    const letterNext = document.getElementById('letter-next');
+    if (!bridgertonLetter || !letterNext) return;
+
+    // Track current step via data attribute or infer from button text
+    const current = bridgertonLetter.getAttribute('data-step') ?
+        parseInt(bridgertonLetter.getAttribute('data-step'), 10) : 1;
+
+    if (current < 3) {
+        const next = current + 1;
+        bridgertonLetter.setAttribute('data-step', String(next));
+        renderLetterStep(next);
+    } else {
+        bridgertonLetter.classList.add('fade-out');
+    }
+}
 
 // ===== HELPER FUNCTION: PLAY SOUND (OPTIONAL) =====
 // Uncomment and use this if you want to add sound effects

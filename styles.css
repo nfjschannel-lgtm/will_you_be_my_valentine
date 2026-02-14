@@ -558,6 +558,11 @@ body::before {
     opacity: 0;
     transform: translateY(18px);
     transition: opacity 0.6s ease, transform 0.6s ease;
+    cursor: pointer;
+}
+
+.letter-inner {
+    cursor: default;
 }
 
 .letter-opening {
@@ -593,6 +598,41 @@ body::before {
     color: #b53a68;
 }
 
+.letter-footer {
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.letter-next {
+    border-radius: 999px;
+    border: 1px solid rgba(148, 112, 76, 0.7);
+    background: rgba(255, 255, 255, 0.6);
+    padding: 6px 16px;
+    font-family: var(--font-main);
+    font-size: 0.85rem;
+    color: #3b2718;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.letter-next:hover {
+    background: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+}
+
+.letter-tap-hint {
+    font-family: var(--font-main);
+    font-size: 0.75rem;
+    color: #9a7b5b;
+}
+
 /* Envelope-to-letter transition */
 .bridgerton-letter.open .letter-envelope {
     transform: translateY(-18px) scale(0.94) rotateX(70deg);
@@ -609,6 +649,64 @@ body::before {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
+}
+
+/* Interactive gift cards for chocolates & flowers */
+.gift-row {
+    display: flex;
+    gap: 14px;
+    margin: 16px 0 6px;
+    flex-wrap: wrap;
+}
+
+.gift-card {
+    flex: 1 1 140px;
+    min-width: 0;
+    background: linear-gradient(135deg, #f7e5d3, #f0d1b6);
+    border-radius: 10px;
+    padding: 10px 12px 12px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(148, 112, 76, 0.55);
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.gift-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.3);
+}
+
+.gift-emoji {
+    font-size: 1.8rem;
+    margin-bottom: 4px;
+}
+
+.gift-title {
+    font-family: "Georgia", "Times New Roman", serif;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+    color: #4b301e;
+}
+
+.gift-text {
+    font-family: var(--font-main);
+    font-size: 0.8rem;
+    color: #6c4c34;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.25s ease, max-height 0.3s ease;
+}
+
+.gift-card.opened {
+    border-color: #b53a68;
+    box-shadow: 0 10px 26px rgba(181, 58, 104, 0.5);
+}
+
+.gift-card.opened .gift-text {
+    opacity: 1;
+    max-height: 120px;
 }
 
 /* ===== FOOTER ===== */
