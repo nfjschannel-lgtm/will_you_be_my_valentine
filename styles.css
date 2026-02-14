@@ -559,6 +559,9 @@ body::before {
     transform: translateY(18px);
     transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.8s ease;
     cursor: pointer;
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .letter-inner {
